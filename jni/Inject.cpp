@@ -28,18 +28,22 @@ int initInject() {
 }
 
 int callRemoteMmap(pt_regs regs) {
-    long parameters[6];
+    long parameters[1];
 
-    void *mmapAddr = getRemoteFuncAddr(pid, libcPath, (void *)mmap);
+    void *mmapAddr = getRemoteFuncAddr(pid, libcPath, (void *)malloc);
     LOGI("Mmap Function Address: 0x%lx\n", (uintptr_t)mmapAddr);
 
     //void *mmap(void *start, size_t length, int prot, int flags, int fd, off_t offsize);
-    parameters[0] = 0; //Not needed
-    parameters[1] = 0x3000;
-    parameters[2] = PROT_READ | PROT_WRITE | PROT_EXEC;
-    parameters[3] = MAP_ANONYMOUS | MAP_PRIVATE;
-    parameters[4] = 0; //Not needed
-    parameters[5] = 0; //Not needed
+    //parameters[0] = 0; //Not needed
+    //parameters[1] = 0x3000;
+    //parameters[2] = PROT_READ | PROT_WRITE | PROT_EXEC;
+    //parameters[3] = MAP_ANONYMOUS | MAP_PRIVATE;
+    //parameters[4] = 0; //Not needed
+    //parameters[5] = 0; //Not needed
+	
+	//This hopefully fixes I/O Error issues
+    //void* malloc(size_t size)
+    parameters[0] = 256; //Size (I don't think any path will be longer than that)
 
     //Call the mmap function of the target process
     return ptrace_call(pid, (uintptr_t)mmapAddr, parameters, 6, &regs);

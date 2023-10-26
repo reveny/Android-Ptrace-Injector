@@ -1,18 +1,22 @@
 LOCAL_PATH := $(call my-dir)
+
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := PtraceInject
+MAIN_LOCAL_PATH := $(call my-dir)
+LOCAL_C_INCLUDES += $(MAIN_LOCAL_PATH)/Headers
 
-LOCAL_CFLAGS := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w
-LOCAL_CFLAGS += -fno-rtti -fno-exceptions -fpermissive
-LOCAL_CPPFLAGS := -Wno-error=format-security -fvisibility=hidden -ffunction-sections -fdata-sections -w -Werror -s -std=c++17
-LOCAL_CPPFLAGS += -Wno-error=c++11-narrowing -fms-extensions -fno-rtti -fno-exceptions -fpermissive
-LOCAL_LDFLAGS += -Wl,--gc-sections,--strip-all, -llog
-LOCAL_ARM_MODE := arm
+include $(CLEAR_VARS)
 
-LOCAL_C_INCLUDES += $(MAIN_LOCAL_PATH)
+LOCAL_MODULE    := Injector
 
-LOCAL_SRC_FILES := Inject.cpp \
+# Code optimization
+LOCAL_CPPFLAGS := -fvisibility=hidden -ffunction-sections -fdata-sections -w
+LOCAL_LDFLAGS += -Wl,--gc-sections,--strip-all -llog
+LOCAL_CPPFLAGS += -fexceptions -Werror -Wpedantic -s -std=c++17
+
+LOCAL_SRC_FILES := Injector.cpp \
+		   RevMemory.cpp \
+		   RemoteProcess.cpp \
 
 LOCAL_LDLIBS := -llog -landroid
 

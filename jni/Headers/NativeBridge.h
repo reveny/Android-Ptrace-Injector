@@ -36,7 +36,7 @@ namespace NativeBridge {
     };
 
     static std::string get_native_bridge() {
-        auto value = std::array<char, PROP_VALUE_MAX>();
+        auto value = std::vector<char>{};
         __system_property_get("ro.dalvik.vm.native.bridge", value.data());
         return {value.data()};
     }
